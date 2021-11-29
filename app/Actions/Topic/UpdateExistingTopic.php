@@ -6,11 +6,13 @@ use App\Models\Topic;
 use Illuminate\Http\Request;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateExistingTopic 
+class UpdateExistingTopic
 {
     use SerializesModels;
 
     public Topic $topic;
+
+    public array $attributes;
 
     public function __construct(Topic $topic)
     {

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 class SectionsController extends Controller
 {
-    public function index(Request $request, Topic $topic)
+    public function index(Request $request, Topic $topic): SectionCollection
     {
         $query = $topic->sections()->withCount(['quizzes']);
 

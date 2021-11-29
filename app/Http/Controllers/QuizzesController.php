@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 class QuizzesController extends Controller
 {
-    public function index(Request $request, Topic $topic, Section $section)
+    public function index(Request $request, Topic $topic, Section $section): QuizCollection
     {
         $query = $section->quizzes();
 
