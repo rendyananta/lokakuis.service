@@ -12,6 +12,9 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * @throws ValidationException
+     */
     public function login(Request $request): JsonResponse
     {
         $request->validate([
@@ -20,21 +23,25 @@ class AuthController extends Controller
             'device_name' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::query()->where('email', $request->input('email'))->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (! $user || ! Hash::check($request->input('password'), $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         return response()->json([
+            'data' => $user,
             'meta' => [
                 'token' => $user->createToken($request->input('device_name'))->plainTextToken
             ]
         ]);
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function register(Request $request, CreateNewUser $creator): JsonResponse
     {
         $this->validate($request, [
