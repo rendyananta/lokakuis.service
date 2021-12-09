@@ -31,6 +31,12 @@ class AuthController extends Controller
             ]);
         }
 
+        $user->makeVisible([
+            'two_factor_secret',
+            'two_factor_recovery_codes',
+            'email_verified_at'
+        ]);
+
         return response()->json([
             'data' => $user,
             'meta' => [
@@ -49,6 +55,12 @@ class AuthController extends Controller
         ]);
 
         event(new Registered($user = $creator->create($request->all())));
+
+        $user->makeVisible([
+            'two_factor_secret',
+            'two_factor_recovery_codes',
+            'email_verified_at'
+        ]);
 
         return response()->json([
             'data' => $user,

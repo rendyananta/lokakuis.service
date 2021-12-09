@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
-use App\Http\Responses\ApiResponse;
+use Illuminate\Contracts\Filesystem\Factory;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use App\Http\Responses\AttachmentResponse;
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,7 +18,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
+        $this->app->bind(AttachmentResponse::class, function (Application $application) {
+            return new AttachmentResponse(
+                $application->make(Request::class),
+                $application->make(Factory::class),
+                $application->make(ResponseFactory::class)
+            );
+        });
     }
 
     /**

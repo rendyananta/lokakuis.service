@@ -34,6 +34,10 @@ Route::group(['namespace' => 'App\Http\Controllers', 'prefix' => 'user', 'middle
     Route::get('topics', 'UsersController@topics');
 });
 
+Route::get('topic/{topic}/banner', 'App\Http\Controllers\TopicsController@banner')->name('api.topic.banner');
+
+Route::get('topic/{topic}/section/{section}/quiz/{quiz}/image', 'App\Http\Controllers\QuizzesController@image')->name('api.topic.section.quiz.image');
+
 Route::group(['namespace' => 'App\Http\Controllers', 'prefix' => 'topic', 'middleware' => 'auth:sanctum'], function () {
     Route::get('/', 'TopicsController@index');
     Route::post('/', 'TopicsController@store');

@@ -8,14 +8,23 @@ use App\Actions\Topic\UpdateExistingTopic;
 use App\Actions\Topic\UploadTopicBanner;
 use App\Http\Resources\TopicCollection;
 use App\Http\Responses\ApiResponse;
+use App\Http\Responses\AttachmentResponse;
 use App\Models\Topic;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TopicsController extends Controller
 {
+    public AttachmentResponse $response;
+
+    public function __construct(AttachmentResponse $response)
+    {
+        $this->response = $response;
+    }
+
     public function index(Request $request): TopicCollection
     {
-        $query = Topic::query()->withCount('sections', 'quizzes')->where('is_public', true);
+        $query = Topic::query()->with('user')->withCount('sections', 'quizzes')->where('is_public', true);
 
         $query->when($request->filled('keyword'), fn($query) => $query->where('title', 'like', '%' . $request->input('keyword') . '%'));
 
@@ -57,5 +66,12 @@ class TopicsController extends Controller
         $this->dispatchSync($action);
 
         return new ApiResponse("Topic sucessfully deleted");
+    }
+
+    public function banner(Topic $topic): Response
+    {
+        $image = $topic->getAttribute('banner') ?? "topics/placeholder.png";
+
+        return $this->response->stream("local", $image);
     }
 }
