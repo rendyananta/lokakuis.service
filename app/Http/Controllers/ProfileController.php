@@ -16,13 +16,13 @@ class ProfileController extends Controller
 
     public function update(Request $request): JsonResponse
     {
-        $request->validate([
-            'email' => 'required|email|unique:users,email',
-            'name' => 'required'
-        ]);
-
         /** $user \App\Models\User */
         $user = $request->user();
+
+        $request->validate([
+            'email' => 'required|email|unique:users,email,' . $request->user()->id,
+            'name' => 'required'
+        ]);
 
         $user->fill([
             'email' => $request->input('email'),
