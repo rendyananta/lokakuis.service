@@ -10,11 +10,15 @@ class Quiz extends Model
     use HasFactory;
 
     protected $fillable = [
-        'question', 'image', 'answer'
+        'question', 'image', 'answer', 'is_math'
     ];
 
     protected $appends = [
         'image_url'
+    ];
+
+    public $casts = [
+        'is_math' => 'boolean'
     ];
 
     public function section() 
@@ -27,7 +31,7 @@ class Quiz extends Model
         return $this->belongsTo(Topic::class);
     }
    
-    public function getImageUrlAttribute(): string
+    public function getImageUrlAttribute(): string|null
     {   
         return is_null($this->getAttribute('image'))
             ? null 

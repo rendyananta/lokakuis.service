@@ -24,6 +24,7 @@ class CreateNewTopic
         ]);
 
         $this->topic = new Topic();
+        $this->topic->user()->associate($request->user());
     }
 
     public function handle(): bool
